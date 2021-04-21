@@ -1,36 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Button } from 'reactstrap';
 import './App.scss';
+import getJokes from '../helpers/data/jokeData';
 
 function App() {
-  const [domWriting, setDomWriting] = useState('Nothing Here!');
+  const [allJokes, setAllJokes] = useState([]);
+  const [singleJoke, setSingleJoke] = useState({});
+  const [showPunchline, setShowPunchline] = useState(false);
 
-  const handleClick = (e) => {
-    console.warn(`You clicked ${e.target.id}`);
-    setDomWriting(`You clicked ${e.target.id}! Check the Console!`);
+  const handleClick = () => {
+    if (showPunchline) {
+      setShowPunchline(false);
+      setSingleJoke(allJokes[Math.floor(Math.random() * allJokes.length)]);
+    } else {
+      setShowPunchline(true);
+    }
   };
+
+  useEffect(() => {
+    getJokes()
+      .then((jokes) => {
+        setAllJokes(jokes);
+        setSingleJoke(jokes[Math.floor(Math.random() * jokes.length)]);
+      });
+  }, []);
 
   return (
     <div className='App'>
-      <h2>INSIDE APP COMPONENT</h2>
       <div>
-        <button
-          id='this-button'
-          className='btn btn-info'
-          onClick={handleClick}
-        >
-          I am THIS button
-        </button>
+      <h1>{singleJoke.setup}</h1>
+      <p>{showPunchline && singleJoke.punchline}</p>
       </div>
-      <div>
-        <button
-          id='that-button'
-          className='btn btn-primary mt-3'
-          onClick={handleClick}
-        >
-          I am THAT button
-        </button>
-      </div>
-      <h3>{domWriting}</h3>
+      <Button color="info" onClick={handleClick}>
+        {showPunchline ? 'Get Another Joke' : 'Get Punchline'}
+      </Button>
     </div>
   );
 }
