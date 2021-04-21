@@ -27,8 +27,10 @@ function App() {
 
   return (
     <div className='App'>
-      <h1>{singleJoke.jokes}</h1>
-      <p>{showPunchline && singleJoke.correctPunchline}</p>
+      <div>
+      <h1>{singleJoke.setup}</h1>
+      <p>{showPunchline && singleJoke.punchline}</p>
+      </div>
       <Button color="info" onClick={handleClick}>
         {showPunchline ? 'Get Another Joke' : 'Get Punchline'}
       </Button>
